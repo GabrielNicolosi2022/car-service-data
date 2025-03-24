@@ -1,0 +1,40 @@
+{
+  "name": "car_service_data",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "mocha test/**/*.test.js"
+  },
+  "keywords": [
+    "API",
+    "control",
+    "mantenimiento",
+    "vehículos",
+    "vencimientos",
+    "documentación"
+  ],
+  "author": "GabrielDev",
+  "license": "ISC",
+  "description": "Esta es una API para llevar el control de mantenimientos y vencimientos de documentación de vehículos",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.2",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.1.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.0"
+  }
+}
