@@ -7,7 +7,7 @@ const environment = "development"; // change environment to 'production', 'devel
 dotenv.config({
   path:
     environment === "development"
-      ? ".env.develoment"
+      ? ".env.development"
       : environment === "testing"
       ? ".env.testing"
       : ".env.production",
@@ -29,8 +29,13 @@ config.db = {
   cs: process.env.MONGO_URI,
   dbUser: process.env.MONGO_USER,
   dbPass: process.env.MONGO_PASS,
-  dbName: process.env.DB_NAME,
+  dbName: process.env.MONGO_NAME,
   testing: process.env.MONGO_TEST,
+};
+
+config.session = {
+  secret: process.env.SESSION_SECRET,
+  ttl: process.env.SESSION_TTL,
 };
 
 // console.log("config.js: ", config);
