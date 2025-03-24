@@ -5,7 +5,7 @@ export const userDTO = (data) => {
     username: data.username,
     phone: data.phone || null,
     email: data.email || null,
-    thumbnail: data.thumbnail || null,
+    thumbnail: data.thumbnail.type || null,
     vehicles: data.vehicles || null,
     last_updated: data.updatedAt,
   };

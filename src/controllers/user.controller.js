@@ -7,6 +7,7 @@ const log = getLogger();
 const createUser = async (req, res) => {
   const data = req.body;
   try {
+    // Verificar si el email o el username ya existen
     const userExist = await services.getByEmailOrUsername(
       data.email,
       data.username
@@ -22,6 +23,11 @@ const createUser = async (req, res) => {
           .status(409)
           .json({ status: "Error", message: "Username already exists" });
       }
+    }
+
+    // Procesar la imagen si está presente
+    if (req.file) {
+      data.thumbnail = req.file.buffer; // Almacenar el Buffer de la imagen en el campo thumbnail
     }
 
     const userCreated = await services.create(data);
@@ -60,9 +66,16 @@ const getAllUsers = async (req, res) => {
 
 // this controller should be preceded by a middleware that checks if the user is authenticated
 const getCurrentUser = async (req, res) => {
-  const { id } = req.session.user;
+  const { id } = req.session.user || req.params;
 
   try {
+    if (!req.session) {
+      log.error("Session user not initialized");
+      return res
+        .status(401)
+        .json({ status: "Error", message: "Session user not initialized" });
+    }
+
     const user = await services.getById(id);
     if (!user) {
       return res
@@ -85,6 +98,13 @@ const updateCurrentUser = async (req, res) => {
   const { id } = req.session.user;
   const data = req.body;
   try {
+    if (!req.session.user) {
+      log.error("Session user not initialized");
+      return res
+        .status(401)
+        .json({ status: "Error", message: "Session user not initialized" });
+    }
+
     const updatedUser = await services.update(id, data);
     if (!user) {
       log.error("Error updating user", error.message);
@@ -106,8 +126,14 @@ const updateCurrentUser = async (req, res) => {
 
 // this controller should be preceded by a middleware that checks if the user is authenticated
 const deleteUser = async (req, res) => {
-  const { id } = req.session.user;
   try {
+    const { id } = req.session.user;
+    if (!req.session.user) {
+      log.error("Session user not initialized");
+      return res
+        .status(401)
+        .json({ status: "Error", message: "Session user not initialized" });
+    }
     const user = await services.eliminate(id);
     if (!user) {
       return res
