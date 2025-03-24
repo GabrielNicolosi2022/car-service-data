@@ -1,27 +1,35 @@
 import userModel from "../models/user.model.js";
 
-const createUser = async (data) => userModel.create(data);
+const create = async (data) => userModel.create(data);
 
-const getUserById = async (id) => userModel.findById(id).lean();
+const getById = async (id) => userModel.findById(id).lean();
 
-const getUserByEmail = async (email) =>
-  userModel.findOne({ email: email }).lean();
+const getByEmail = async (email) => userModel.findOne({ email: email }).lean();
 
-const getUserByUsername = async (username) =>
+const getByUsername = async (username) =>
   userModel.findOne({ username: username }).lean();
 
-const updateUser = async (id, data) =>
+const getByEmailOrUsername = async (email, username) => {
+  return await userModel
+    .findOne({
+      $or: [{ email: email }, { username: username }],
+    })
+    .lean();
+};
+
+const update = async (id, data) =>
   userModel
     .findByIdAndUpdate({ _id: id }, { $set: data }, { new: true })
     .exec();
 
-const deleteUser = async (id) => userModel.findByIdAndDelete(id);
+const eliminate = async (id) => userModel.findByIdAndDelete(id);
 
 export {
-  createUser,
-  getUserById,
-  getUserByEmail,
-  getUserByUsername,
-  updateUser,
-  deleteUser,
+  create,
+  getById,
+  getByEmail,
+  getByUsername,
+  getByEmailOrUsername,
+  update,
+  eliminate,
 };
