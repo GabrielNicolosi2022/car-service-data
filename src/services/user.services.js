@@ -2,6 +2,8 @@ import userModel from "../models/user.model.js";
 
 const create = async (data) => userModel.create(data);
 
+const getAll = async () => userModel.find().lean();
+
 const getById = async (id) => userModel.findById(id).lean();
 
 const getByEmail = async (email) => userModel.findOne({ email: email }).lean();
@@ -26,6 +28,7 @@ const eliminate = async (id) => userModel.findByIdAndDelete(id);
 
 export {
   create,
+  getAll,
   getById,
   getByEmail,
   getByUsername,
