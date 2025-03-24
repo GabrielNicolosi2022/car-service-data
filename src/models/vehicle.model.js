@@ -39,7 +39,6 @@ const serviceSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    versionKey: false,
   }
 );
 
@@ -66,7 +65,6 @@ const documentationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    versionKey: false,
   }
 );
 
@@ -101,7 +99,6 @@ const vehicleSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    versionKey: true,
   }
 );
 
