@@ -6,6 +6,7 @@ import __dirname from "./dirname.js";
 import morgan from "morgan";
 import getLogger from "./utils/logger.utils.js";
 import db from "./config/dbConnection.js";
+import indexRouter from "./routes/index.routes.js";
 
 /* CONFIGURATIONS */
 const app = express();
@@ -24,6 +25,7 @@ const log = getLogger();
 app.use(morgan("dev"));
 
 /* Routes */
+app.use(indexRouter);
 
 /* Server */
 const server = app.listen(port, (err) => {
