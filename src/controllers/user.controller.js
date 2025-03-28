@@ -1,47 +1,29 @@
+import getLogger from "../utils/logger.utils.js";
 import * as services from "../services/user.services.js";
 import { userDTO } from "../dto/user.dto.js";
-import getLogger from "../utils/logger.utils.js";
 
 const log = getLogger();
 
-const createUser = async (req, res) => {
-  const data = req.body;
+// Registro local de usuario - toda la lógica está en el controlador de registro en passportStrategies
+const userRegister = async (req, res) => {
+  console.log("controller - userRegister: ", req);
   try {
-    // Verificar si el email o el username ya existen
-    const userExist = await services.getByEmailOrUsername(
-      data.email,
-      data.username
-    );
-    if (userExist) {
-      if (userExist.email === data.email) {
-        return res
-          .status(409)
-          .json({ status: "Error", message: "Email already exists" });
-      }
-      if (userExist.username === data.username) {
-        return res
-          .status(409)
-          .json({ status: "Error", message: "Username already exists" });
-      }
-    }
-
-    // Procesar la imagen si está presente
-    if (req.file) {
-      data.thumbnail = req.file.buffer; // Almacenar el Buffer de la imagen en el campo thumbnail
-    }
-
-    const userCreated = await services.create(data);
-    const newUser = userDTO(userCreated);
+    const userCreated = req.user;
 
     res.status(201).json({
-      status: "Success",
-      message: "New user created succesfully",
-      payload: newUser,
+      status: "success",
+      message: "Registro exitoso. Inicia sesión para continuar.",
+      user: userCreated,
     });
   } catch (error) {
     log.error("Error creating user", error.message);
     res.status(500).json({ status: "Error", message: "Internal Server Error" });
   }
+};
+
+// Login local de usuario
+const userLogin = async (req, res) => {
+  // TODO CREAR LOGIN A PARTIR DE ECOMMBACK LOGIN
 };
 
 // Only the development team can use this controller
@@ -151,7 +133,8 @@ const deleteUser = async (req, res) => {
 };
 
 export {
-  createUser,
+  userRegister,
+  userLogin,
   getAllUsers,
   getCurrentUser,
   updateCurrentUser,
