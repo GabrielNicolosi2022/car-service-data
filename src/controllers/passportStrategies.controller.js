@@ -1,4 +1,3 @@
-import config from "../config/config.js";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { isValidPassword } from "../utils/bcrypt.utils.js";
@@ -13,24 +12,24 @@ const initializePassport = () => {
   passport.use(
     "local-register",
     new LocalStrategy(
-      { passRequestToCallback: true, usernameField: "email" },
+      { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
-        const { first_name, last_name, nickname, thumbnail, role } = req.body;
+        if (!req.body) {
+          log.error("No se encontro el req.body...");
+          return done(null, false, { message: "Invalid request data" });
+        }
+
+        const { first_name, last_name, nickname, role } = req.body;
+
+        let thumbnail = req.file ? req.file.buffer : null;
 
         try {
           // Verificar si el email ya existe
-          const userExist = await services.getByEmail({ email: username });
+          const userExist = await services.getByEmail(username);
           if (userExist) {
             if (userExist.email === username) {
-              return res
-                .status(409)
-                .json({ status: "Error", message: "Email already exists" });
+              return done(null, false, { message: "Email already exists" });
             }
-          }
-
-          // procesar la imagen
-          if (req.file) {
-            thumbnail = req.file.buffer; // Almacenar el Buffer de la imagen en el campo thumbnail
           }
 
           const result = await createUser({
@@ -46,7 +45,11 @@ const initializePassport = () => {
           log.info("New user created");
           return done(null, result, { message: "New user created" });
         } catch (error) {
-          log.fatal("Error al obtener el usuario: " + error.message);
+          log.fatal(
+            "passportStrategies (local-register) - Error al obtener el usuario: " +
+              error.message
+          );
+          console.error(error);
           return done("error: " + error);
         }
       }
