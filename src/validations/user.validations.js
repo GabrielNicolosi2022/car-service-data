@@ -14,13 +14,13 @@ const validateUsersFields = [
     .withMessage("Last name is required")
     .isString()
     .withMessage("Last name must be a string"),
-  check("username")
+  check("nickname")
     .notEmpty()
-    .withMessage("Username is required")
+    .withMessage("Nickname is required")
     .isString()
-    .withMessage("Username must be a string")
+    .withMessage("Nickname must be a string")
     .isLength({ min: 3 })
-    .withMessage("Username must be at least 3 characters long"),
+    .withMessage("Nickname must be at least 3 characters long"),
   check("email")
     .notEmpty()
     .withMessage("Email is required")
@@ -41,7 +41,7 @@ const validateUsersFields = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      log.error("Validation error", errors.array());
+      log.error("user.validations - Validation error: ", errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
     // If no errors, proceed to the next middleware
