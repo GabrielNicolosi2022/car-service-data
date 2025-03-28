@@ -1,14 +1,22 @@
 import "dotenv/config";
-import express, { json, urlencoded } from "express";
 import config from "./config/config.js";
-import cors from "cors";
+import express from "express";
 import __dirname from "./dirname.js";
+import cors from "cors";
+
+import passport from "passport";
+import initializePassport from "./controllers/passportStrategies.controller.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import morgan from "morgan";
-import getLogger from "./utils/logger.utils.js";
-import db from "./config/dbConnection.js";
+
 import indexRouter from "./routes/index.routes.js";
+
+import morgan from "morgan";
+import db from "./config/dbConnection.js";
+import getLogger from "./utils/logger.utils.js";
+
+/* Logger */
+const log = getLogger();
 
 /* CONFIGURATIONS */
 const app = express();
@@ -16,8 +24,8 @@ const port = config.server.port;
 
 /* Express */
 app.use(cors());
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
 
 /* Session */
@@ -33,8 +41,10 @@ app.use(
   })
 );
 
-/* Logger */
-const log = getLogger();
+/* Passport */
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 /* Morgan */
 app.use(morgan("dev"));
@@ -49,5 +59,5 @@ const server = app.listen(port, (err) => {
     log.error("*** CONNECTION ERROR ***: ", err.message);
     return;
   }
-  log.info(`Running on port ${port}, in ${config.environment.env} mode.`);
+  log.info(`Running on port ${port}, in ${config.environment.env} mode`);
 });
