@@ -1,4 +1,6 @@
 {
+  "invalidFormat_1": "Invalid format request",
+  "invalidFormat_2": {},
   "mockUserAdmin": {
     "first_name": "Gabriel",
     "last_name": "Nicolosi",
@@ -31,6 +33,8 @@
     "pass": "miPass1234",
     "thumbnail": "path/to/the/photo.png"
   },
-  "invalidFormat_1": "Invalid format request",
-  "invalidFormat_2": {}
+  "correctLogin": {
+    "email": "gabrielDev80@gmail.com",
+    "password": "hashedPass80"
+  }
 }

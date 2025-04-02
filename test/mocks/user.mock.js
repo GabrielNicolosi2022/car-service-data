@@ -2,38 +2,43 @@ export const invalidFormat_1 = "Invalid format request";
 
 export const invalidFormat_2 = {};
 
-export const mockIncompleteUser = {
+export const incompleteUser = {
   first_name: "Jose",
   last_name: "Moñoz",
   email: "josemunoz@gmail.com",
-  pass: "miPass1234",
+  password: "miPass1234",
   thumbnail: "path/to/the/photo.png",
 };
 
-export const mockInvalidUser = {
+export const invalidUser = {
   first_name: "Jose",
   last_name: "Moñoz",
-  username: 123456,
+  nickname: 123456,
   email: "josemunoz@gmail.com",
-  pass: "miPass1234",
+  password: "miPass1234",
   thumbnail: "path/to/the/photo.png",
 };
 
-export const mockUserAdmin = {
+export const userAdmin = {
   first_name: "Gabriel",
   last_name: "Nicolosi",
-  username: "Gabrieldev",
+  nickname: "Gabrieldev",
   email: "gabrielDev80@gmail.com",
-  pass: "hashedPass80",
+  password: "hashedPass80",
   role: "admin",
 };
 
-export const mockCommonUser = {
+export const commonUser = {
   first_name: "Miguel",
   last_name: "Perez",
-  username: "miguerez",
+  nickname: "miguerez",
   phone: "1150485672",
   email: "miguerez@gmail.com",
-  pass: "Password1234",
+  password: "Password1234",
   thumbnail: "path/to/the/photo.png",
+};
+
+export const correctLogin = {
+  email: "gabrielDev80@gmail.com",
+  password: "hashedPass80",
 };
