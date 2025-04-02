@@ -1,7 +1,10 @@
 import { Router } from "express";
 import passport from "passport";
 import { userLogin, userRegister } from "../controllers/user.controller.js";
-import { validateUsersFields } from "../validations/user.validations.js";
+import {
+  validateLoginFields,
+  validateUsersFields,
+} from "../validations/user.validations.js";
 import upload from "../utils/upload.utils.js";
 
 const sessionRouter = Router();
@@ -18,7 +21,13 @@ sessionRouter.post(
 );
 
 // Login de usuario mediante app
-sessionRouter.post("/login", passport.authenticate("local-login"), userLogin);
+sessionRouter.post(
+  "/login",
+  upload.single(),
+  validateLoginFields,
+  passport.authenticate("local-login"),
+  userLogin
+);
 
 // Test
 sessionRouter.post("/test", upload.single("thumbnail"), (req, res) => {

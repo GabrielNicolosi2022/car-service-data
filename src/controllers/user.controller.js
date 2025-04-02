@@ -6,14 +6,22 @@ const log = getLogger();
 
 // Registro local de usuario - toda la lógica está en el controlador de registro en passportStrategies
 const userRegister = async (req, res) => {
-  console.log("controller - userRegister: ", req);
+  // console.log("controller - userRegister: ", req.user);
   try {
-    const userCreated = req.user;
+    const data = req.user;
+    if (!data) {
+      log.error("controller - userRegister: No hay una data válida");
+      return res
+        .status(404)
+        .json({ status: "Error", message: "Data not found" });
+    }
+
+    const userCreated = userDTO(data);
 
     res.status(201).json({
-      status: "success",
+      status: "Success",
       message: "Registro exitoso. Inicia sesión para continuar.",
-      user: userCreated,
+      payload: userCreated,
     });
   } catch (error) {
     log.error("Error creating user", error.message);
@@ -23,7 +31,26 @@ const userRegister = async (req, res) => {
 
 // Login local de usuario
 const userLogin = async (req, res) => {
-  // TODO CREAR LOGIN A PARTIR DE ECOMMBACK LOGIN
+  try {
+    const data = req.user;
+    // console.log("controller - userlogin: ", data);
+    if (!data) {
+      log.error("Error al iniciar sesión");
+      return res.status(400).json({
+        status: "Error",
+        message: "Error al intentar inicio de sesión",
+      });
+    }
+    const currentUser = userDTO(data);
+    res.status(200).json({
+      status: "Success",
+      message: "Session init successfully",
+      payload: currentUser,
+    });
+  } catch (error) {
+    log.fatal("controller - userlogin: Error de Servidor", error);
+    res.status(500).json({ status: "Error", message: error.message });
+  }
 };
 
 // Only the development team can use this controller
