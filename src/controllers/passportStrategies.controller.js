@@ -19,8 +19,8 @@ const initializePassport = () => {
           return done(null, false, { message: "Invalid request data" });
         }
 
-        const { first_name, last_name, nickname, role } = req.body;
-
+        const { first_name, last_name, nickname, phone, role } = req.body;
+        // console.log("passportStrategies (local-register) - req.body: ", req.body);
         let thumbnail = req.file ? req.file.buffer : null;
 
         try {
@@ -38,12 +38,13 @@ const initializePassport = () => {
             nickname,
             email: username,
             password,
+            phone,
             thumbnail,
             role,
           });
 
-          log.info("New user created");
-          return done(null, result, { message: "New user created" });
+          log.info("New user registered");
+          return done(null, result, { message: "New user registered" });
         } catch (error) {
           log.fatal(
             "passportStrategies (local-register) - Error al obtener el usuario: " +
@@ -61,13 +62,13 @@ const initializePassport = () => {
     "local-login",
     new LocalStrategy(
       {
-        passRequestToCallback: true,
+        passReqToCallback: true,
         usernameField: "email",
       },
       async (req, email, password, done) => {
         try {
-          const user = await services.getByEmail({ email });
-          if (!email) {
+          const user = await services.getByEmail(email);
+          if (!user) {
             log.error("Incorrect credentials");
             return done(null, false, {
               message: "Incorrect credentials",
@@ -80,7 +81,7 @@ const initializePassport = () => {
             log.error("Incorrect password");
             return done(null, false, { message: "Incorrect password" });
           }
-          log.info("local-login - userSession: ", user);
+          // log.info("passportStrategies (local-login) - userSession: ", user);
           log.info(`user ${user._id} succesfully logged in`);
 
           return done(null, user);
@@ -93,7 +94,7 @@ const initializePassport = () => {
   );
 
   // Serialización
-  passport.serializeUser((user, done) => done(null, user.id));
+  passport.serializeUser((user, done) => done(null, user._id));
 
   // Deserialización
   passport.deserializeUser(async (id, done) => {

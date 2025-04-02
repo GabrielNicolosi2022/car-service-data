@@ -10,6 +10,7 @@ export const createUser = async ({
   nickname,
   email,
   password,
+  phone,
   thumbnail,
   role,
 }) => {
@@ -20,6 +21,7 @@ export const createUser = async ({
       nickname,
       email,
       password: createHash(password),
+      phone,
       thumbnail,
       role,
     };
