@@ -9,3 +9,5 @@ La misma cuenta con avisos de mantenimientos o vencimientos mediante [email](htt
 
 Para operar con Car Service Data contarás un inicio de sesión mediante [Passport](https://www.passportjs.org/tutorials/password/) ara tener la seguridad de que solo tú tienes acceso a los datos de tus vehículos, y [bcrypt](https://www.npmjs.com/package/bcrypt) para encriptación de contraseñas.
 La persistencia de datos se realiza mediante [MongoDB](https://account.mongodb.com/account/login?n=https%3A%2F%2Fcloud.mongodb.com%2Fv2%2F6483b1c9bee31d15ef11b182&nextHash=%23clusters&signedOut=true).
+
+testing: ![Resultados de las pruebas](./test/assets/test-results.png)

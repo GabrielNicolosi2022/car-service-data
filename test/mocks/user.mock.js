@@ -38,6 +38,18 @@ export const commonUser = {
   thumbnail: "path/to/the/photo.png",
 };
 
+export const commonUserUpdated = {
+  phone: "1150482345",
+};
+
+export const commonUserUpdatedNickname = {
+  nickname: "1150482345",
+};
+
+export const commonUserUpdatedEmail = {
+  email: "migueperez@gmail.com",
+};
+
 export const correctLogin = {
   email: "gabrielDev80@gmail.com",
   password: "hashedPass80",
