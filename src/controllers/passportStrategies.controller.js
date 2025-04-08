@@ -20,7 +20,6 @@ const initializePassport = () => {
         }
 
         const { first_name, last_name, nickname, phone, role } = req.body;
-        // console.log("passportStrategies (local-register) - req.body: ", req.body);
         let thumbnail = req.file ? req.file.buffer : null;
 
         try {
@@ -28,7 +27,11 @@ const initializePassport = () => {
           const userExist = await services.getByEmail(username);
           if (userExist) {
             if (userExist.email === username) {
-              return done(null, false, { message: "Email already exists" });
+              // log.error(
+              //   "passportStrategies (local-register) - El email ya existe",
+              //   req.body
+              // );
+              return done(null, false, { message: "duplicate key error" });
             }
           }
 

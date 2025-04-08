@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { customAuthenticate } from "../middlewares/user.middlewares.js";
 import { userLogin, userRegister } from "../controllers/user.controller.js";
 import {
   validateLoginFields,
@@ -16,7 +17,7 @@ sessionRouter.post(
   "/register",
   upload.single("thumbnail"),
   validateUsersFields,
-  passport.authenticate("local-register"),
+  customAuthenticate("local-register", { session: false }),
   userRegister
 );
 
