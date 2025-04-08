@@ -61,3 +61,5 @@ const server = app.listen(port, (err) => {
   }
   log.info(`Running on port ${port}, in ${config.environment.env} mode`);
 });
+
+export default app;
