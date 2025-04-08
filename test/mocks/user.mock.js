@@ -1,3 +1,7 @@
+import path from "path";
+
+const thumbnailPath = path.resolve("./test/assets/test-thumbnail.jpg");
+
 export const invalidFormat_1 = "Invalid format request";
 
 export const invalidFormat_2 = {};
@@ -7,7 +11,7 @@ export const incompleteUser = {
   last_name: "Moñoz",
   email: "josemunoz@gmail.com",
   password: "miPass1234",
-  thumbnail: "path/to/the/photo.png",
+  thumbnail: thumbnailPath,
 };
 
 export const invalidUser = {
@@ -16,7 +20,7 @@ export const invalidUser = {
   nickname: 123456,
   email: "josemunoz@gmail.com",
   password: "miPass1234",
-  thumbnail: "path/to/the/photo.png",
+  thumbnail: thumbnailPath,
 };
 
 export const userAdmin = {
@@ -35,7 +39,7 @@ export const commonUser = {
   phone: "1150485672",
   email: "miguerez@gmail.com",
   password: "Password1234",
-  thumbnail: "path/to/the/photo.png",
+  thumbnail: thumbnailPath,
 };
 
 export const commonUserUpdated = {
@@ -51,6 +55,14 @@ export const commonUserUpdatedEmail = {
 };
 
 export const correctLogin = {
-  email: "gabrielDev80@gmail.com",
-  password: "hashedPass80",
+  email: "miguerez@gmail.com",
+  password: "Password1234",
+};
+
+export const LoginWhitoutEmail = {
+  password: "Password1234",
+};
+
+export const LoginWhitoutPassword = {
+  email: "miguerez@gmail.com",
 };

@@ -4,7 +4,6 @@ import {
   getAllUsers,
   getCurrentUser,
   updateCurrentUser,
-  userRegister,
 } from "../controllers/user.controller.js";
 import { sessionInitVeryfication } from "../middlewares/common.middlewares.js";
 import { validateAsAdmin } from "../middlewares/user.middlewares.js";
