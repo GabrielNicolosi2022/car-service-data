@@ -1,6 +1,3 @@
-export const sessionInitVeryfication = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  next();
-};
+import getLogger from "../utils/logger.utils";
+
+const log = getLogger();

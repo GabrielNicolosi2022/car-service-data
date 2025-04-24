@@ -9,15 +9,14 @@ const dbURI = config.db.cs;
 
 describe("user services testing", function () {
   this.timeout(6000);
-  let connection;
 
   before(async () => {
-    connection = await mongoose.connect(dbURI);
+    await mongoose.connect(dbURI);
   });
 
   after(async () => {
     // Despues de todos los test cerrar la conexión
-    await connection.disconnect();
+    await mongoose.connection.close();
   });
 
   beforeEach(async () => {
