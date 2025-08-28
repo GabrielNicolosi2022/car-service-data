@@ -52,20 +52,20 @@ const validateUsersFields = [
 const validateLoginFields = [
   check("email")
     .notEmpty()
-    .withMessage("Email is required")
+    .withMessage("El campo Email es obligatorio.")
     .isEmail()
-    .withMessage("Email is invalid")
+    .withMessage("El Email es inválido.")
     .normalizeEmail(),
   check("password")
     .notEmpty()
-    .withMessage("Password is required")
+    .withMessage("El campo Password es obligatorio.")
     .isString()
-    .withMessage("Password must be a string")
+    .withMessage("El Password debe ser un string.")
     .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters long")
+    .withMessage("El Password debe tener una longitud minima de 8 characters.")
     .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/)
     .withMessage(
-      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      "El Password debe contener al menos una letra mayúscula, una letra minúscula, y un número."
     ),
   (req, res, next) => {
     const errors = validationResult(req);
