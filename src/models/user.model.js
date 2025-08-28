@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
     thumbnail: {
-      type: Buffer,
+      type: String,
       required: false,
     },
     vehicles: [
