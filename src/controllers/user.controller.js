@@ -1,6 +1,7 @@
 import getLogger from "../utils/logger.utils.js";
 import * as services from "../services/user.services.js";
 import { userDTO } from "../dto/user.dto.js";
+import { generateToken } from "../utils/jwt.utils.js";
 
 const log = getLogger();
 
@@ -33,7 +34,6 @@ const userRegister = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const data = req.user;
-    // console.log("controller - userlogin: ", data);
     if (!data) {
       log.error("Error al iniciar sesión");
       return res.status(400).json({
@@ -41,11 +41,19 @@ const userLogin = async (req, res) => {
         message: "Error al intentar inicio de sesión",
       });
     }
+
     const currentUser = userDTO(data);
+
+    // Generar el token JWT
+    const token = generateToken({
+      id: currentUser.id,
+      email: currentUser.email,
+    });
+    console.log("token: ", token);
     res.status(200).json({
       status: "Success",
-      message: "Session init successfully",
-      payload: currentUser,
+      message: "Sesión iniciada con éxito",
+      payload: { user: currentUser, token },
     });
   } catch (error) {
     log.fatal("controller - userlogin: Error de Servidor", error);
@@ -75,6 +83,7 @@ const getAllUsers = async (req, res) => {
 
 // this controller should be preceded by a middleware that checks if the user is authenticated
 const getCurrentUser = async (req, res) => {
+  // console.log("controller - getCurrentUser: ", req);
   const { id } = req.session.user || req.params;
 
   try {
@@ -92,6 +101,7 @@ const getCurrentUser = async (req, res) => {
         .json({ status: "Error", message: "User not found" });
     }
     const currentUser = userDTO(user);
+    // console.log("currentUser: ", currentUser);
     res.status(200).json({
       status: "Success",
       message: "User retrieved successfully",
@@ -104,31 +114,34 @@ const getCurrentUser = async (req, res) => {
 };
 // this controller should be preceded by a middleware that checks if the user is authenticated
 const updateCurrentUser = async (req, res) => {
-  const { id } = req.session.user;
+  console.log("updateCurrentUser - req.session : ", req.session);
   const data = req.body;
-  try {
-    if (!req.session.user) {
-      log.error("Session user not initialized");
-      return res
-        .status(401)
-        .json({ status: "Error", message: "Session user not initialized" });
-    }
+  const id = data.user_id;
 
+  // Si hay imagen, guarda solo el string base64
+  if (req.file) {
+    data.thumbnail = req.file.buffer.toString("base64");
+    // Si quieres guardar el mimeType, usa otro campo, por ejemplo:
+    // data.thumbnailMime = req.file.mimetype;
+  }
+
+  try {
     const updatedUser = await services.update(id, data);
-    if (!user) {
-      log.error("Error updating user", error.message);
+
+    if (!updatedUser) {
+      log.error("try - Error updating user", error?.message);
       return res
         .status(404)
         .json({ status: "Error", message: "User not found" });
     }
-    const formattedUser = userDTO(user);
+    const formattedUser = userDTO(updatedUser);
     res.status(200).json({
       Status: "Success",
       message: "User updated succesfully",
       payload: formattedUser,
     });
   } catch (error) {
-    log.error("Error updating user", error.message);
+    log.error("catch - Error updating user: " + error.message);
     res.status(500).json({ status: "Error", message: "Internal Server Error" });
   }
 };

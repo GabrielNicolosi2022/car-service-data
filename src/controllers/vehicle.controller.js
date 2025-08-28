@@ -1,10 +1,18 @@
+import userModel from "../models/user.model.js";
 import * as service from "../services/vehicle.services.js";
-import getLogger from "../config/customLogger.js";
+import getLogger from "../utils/logger.utils.js";
+import { registrationFormatter } from "../utils/vehicle.utils.js";
 
 const log = getLogger();
 
 const createVehicle = async (req, res) => {
   const data = req.body;
+  // Asociar el vehículo al usuario actual
+  if (data.user_id) {
+    data.owner = data.user_id;
+    delete data.user_id;
+  }
+  console.log("DATA DEL FRONT: ", data);
   try {
     const vehicle = await service.create(data);
     if (!vehicle) {
@@ -13,8 +21,24 @@ const createVehicle = async (req, res) => {
         .status(400)
         .json({ status: "Error", message: "Error creating vehicle" });
     }
-    res.ststus(201).json({
-      stattus: "Success",
+    // Si el vehículo se crea correctamente, se asocia al usuario
+    if (vehicle && data.owner) {
+      const userUpdated = await userModel.findByIdAndUpdate(
+        data.owner,
+        { $push: { vehicles: vehicle._id } },
+        { new: true }
+      );
+
+      if (!userUpdated) {
+        log.error("Error updating user with vehicle", { data });
+        return res
+          .status(400)
+          .json({ status: "Error", message: "Error updating user" });
+      }
+    }
+
+    res.status(201).json({
+      status: "Success",
       message: "Vehicle created successfully",
       payload: vehicle,
     });
@@ -47,7 +71,8 @@ const getAllVehicles = async (req, res) => {
 };
 
 const getVehicleById = async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
+  // console.log("getVehicleById - id: ", req.params);
   try {
     const vehicle = await service.getById(id);
     if (!vehicle) {
@@ -56,6 +81,7 @@ const getVehicleById = async (req, res) => {
         .status(404)
         .json({ status: "Error", message: "Vehicle not Found" });
     }
+    console.log("vehicle: ", vehicle);
     res.status(200).json({
       status: "Success",
       message: "Vehicle found successfully",
@@ -70,13 +96,14 @@ const getVehicleById = async (req, res) => {
   }
 };
 
-const getVehicleByRegistration = async (res, res) => {
+const getVehicleByRegistration = async (req, res) => {
   const registration = req.body;
+  const formattedRegistration = registrationFormatter(registration);
   try {
-    const vehicle = await service.getByRegistration(registration);
+    const vehicle = await service.getByRegistration(formattedRegistration);
     if (!vehicle) {
       log.error("getVehicleByRegistration controller - Vehicle not found: ", {
-        registration,
+        formattedRegistration,
       });
       return res.status(404).json({ status: "Error", message: "Not found" });
     }
@@ -99,8 +126,20 @@ const getVehicleByRegistration = async (res, res) => {
 };
 
 const updateVehicleById = async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
   const data = req.body;
+  console.log("id: ", id);
+  console.log("data: ", data);
+
+  // Si hay imagen, guarda solo el string base64
+  if (req.files && req.files.length > 0) {
+    data.thumbnails = req.files.map((file) => file.buffer.toString("base64"));
+    // Si quieres guardar el mimeType, usa otro campo, por ejemplo:
+    // data.thumbnailMime = req.file.mimetype;
+  }
+
+  data.registration = registrationFormatter(data.registration);
+
   try {
     const vehicle = await service.update(id, data);
     if (!vehicle) {
@@ -116,9 +155,9 @@ const updateVehicleById = async (req, res) => {
     });
   } catch (error) {
     log.fatal("updateVehicleById controller - Internal Server Error: ", error);
-    res.status(500).json({
+    return res.status(500).json({
       status: "Error",
-      message: "Internal Servefr Error",
+      message: "Internal Server Error",
     });
   }
 };

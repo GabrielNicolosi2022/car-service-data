@@ -20,7 +20,7 @@ const initializePassport = () => {
         }
 
         const { first_name, last_name, nickname, phone, role } = req.body;
-        let thumbnail = req.file ? req.file.buffer : null;
+        let thumbnail = req.file ? req.file.buffer.toString("base64") : null;
 
         try {
           // Verificar si el email ya existe
@@ -74,7 +74,7 @@ const initializePassport = () => {
           if (!user) {
             log.error("Incorrect credentials");
             return done(null, false, {
-              message: "Incorrect credentials",
+              message: "Email incorrecto",
             });
           }
 
@@ -82,7 +82,7 @@ const initializePassport = () => {
           // log.info("passwordMatch: " + passwordMatch);
           if (!passwordMatch) {
             log.error("Incorrect password");
-            return done(null, false, { message: "Incorrect password" });
+            return done(null, false, { message: "Password Incorrecto" });
           }
           // log.info("passportStrategies (local-login) - userSession: ", user);
           log.info(`user ${user._id} succesfully logged in`);
