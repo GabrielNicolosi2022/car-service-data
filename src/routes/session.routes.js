@@ -26,7 +26,7 @@ sessionRouter.post(
   "/login",
   upload.single(),
   validateLoginFields,
-  passport.authenticate("local-login"),
+  customAuthenticate("local-login"),
   userLogin
 );
 
