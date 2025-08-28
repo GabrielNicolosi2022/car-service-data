@@ -38,6 +38,10 @@ config.session = {
   ttl: process.env.SESSION_TTL,
 };
 
+config.jwt = {
+  secret: process.env.JWT_SECRET,
+  expire: process.env.JWT_EXPIRE,
+};
 // console.log("config.js: ", config);
 
 export default config;

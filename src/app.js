@@ -23,7 +23,7 @@ const app = express();
 const port = config.server.port;
 
 /* Express */
-app.use(cors());
+app.use(cors("http://localhost:5173/*"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
@@ -37,7 +37,12 @@ app.use(
     }),
     secret: config.session.secret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: {
+      // maxAge: config.session.ttl * 1000,
+      secure: false, // Cambiar a true en producción
+      httpOnly: true,
+    },
   })
 );
 
